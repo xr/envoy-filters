@@ -39,7 +39,7 @@ static_resources:
                   #         runtime: envoy.wasm.runtime.v8
                   #         code:
                   #           local:
-                  #             filename: /Users/liangguo/Desktop/projects/unity-gateway-filters/filters/authorization/main.wasm
+                  #             filename: /Users/liangguo/Desktop/projects/envoy-filters/filters/authorization/main.wasm
                   #       configuration:
                   #         "@type": "type.googleapis.com/google.protobuf.StringValue"
                   #         value: |
