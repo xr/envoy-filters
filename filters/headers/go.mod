@@ -1,4 +1,4 @@
-module github.com/unity-technologies/unity-gateway-filters/filters/headers
+module github.com/xr/filters/headers
 
 go 1.19
 
