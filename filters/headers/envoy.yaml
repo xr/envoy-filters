@@ -1,8 +1,8 @@
-admin:
-  address:
-    socket_address:
-      address: 127.0.0.1
-      port_value: 9902
+# admin:
+#   address:
+#     socket_address:
+#       address: 127.0.0.1
+#       port_value: 9902
 static_resources:
   listeners:
     - name: listener_0
@@ -31,14 +31,96 @@ static_resources:
                           runtime: envoy.wasm.runtime.v8
                           code:
                             local:
+                              # filename: /Users/liangguo/Desktop/projects/unity-gateway/filters/headers/plugin.wasm
                               filename: /Users/liangguo/Desktop/projects/envoy-filters/filters/headers/main.wasm
                         configuration:
                           "@type": "type.googleapis.com/google.protobuf.StringValue"
                           value: |
                             {
-                              "in": ["x-header-1", "x-header-2"],
-                              "out": ["x-res-header-1", "x-res-header-2"]
+                              "in": [
+                                ":authority",
+                                ":method",
+                                ":path",
+                                ":scheme",
+                                "accept",
+                                "accept-encoding",
+                                "accept-language",
+                                "cache-control",
+                                "content-length",
+                                "content-type",
+                                "cookie",
+                                "dnt",
+                                "origin",
+                                "pragma",
+                                "referer",
+                                "sec-fetch-dest",
+                                "sec-fetch-mode",
+                                "sec-fetch-site",
+                                "sec-fetch-user",
+                                "upgrade-insecure-requests",
+                                "user-agent",
+                                "x-forwarded-for",
+                                "x-forwarded-proto",
+                                "x-request-id",
+                                "x-envoy-decorator-operation",
+                                "x-envoy-peer-metadata",
+                                "x-envoy-peer-metadata-id"
+                              ],
+                              "out": [
+                                ":status",
+                                "access-control-allow-credentials",
+                                "access-control-allow-headers",
+                                "access-control-allow-methods",
+                                "access-control-allow-origin",
+                                "access-control-allow-private-network",
+                                "access-control-expose-headers",
+                                "access-control-max-age",
+                                "age",
+                                "cache-control",
+                                "connection",
+                                "content-encoding",
+                                "content-length",
+                                "content-type",
+                                "date",
+                                "etag",
+                                "expires",
+                                "grpc-message",
+                                "grpc-status",
+                                "keep-alive",
+                                "last-modified",
+                                "location",
+                                "proxy-connection",
+                                "proxy-status",
+                                "server",
+                                "transfer-encoding",
+                                "upgrade",
+                                "vary",
+                                "via",
+                                "x-envoy-attempt-count",
+                                "x-envoy-decorator-operation",
+                                "x-envoy-degraded",
+                                "x-envoy-immediate-health-check-fail",
+                                "x-envoy-ratelimited",
+                                "x-envoy-upstream-canary",
+                                "x-envoy-upstream-healthchecked-cluster",
+                                "x-envoy-upstream-service-time",
+                                "x-request-id"
+                              ]
                             }
+                  - name: envoy.filters.http.wasm
+                    typed_config:
+                      "@type": type.googleapis.com/envoy.extensions.filters.http.wasm.v3.Wasm
+                      config:
+                        name: dummy
+                        root_id: dummy
+                        vm_config:
+                          runtime: envoy.wasm.runtime.v8
+                          code:
+                            local:
+                              filename: /Users/liangguo/Desktop/projects/envoy-filters/filters/dummy/main.wasm
+                        configuration:
+                          "@type": "type.googleapis.com/google.protobuf.StringValue"
+                          value: "{}"
                   - name: envoy.filters.http.router
                     typed_config:
                       "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router

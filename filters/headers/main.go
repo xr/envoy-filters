@@ -15,6 +15,7 @@
 package main
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/tidwall/gjson"
@@ -176,6 +177,21 @@ type httpHeaders struct {
 
 // Override types.DefaultHttpContext.
 func (ctx *httpHeaders) OnHttpRequestHeaders(numHeaders int, endOfStream bool) types.Action {
+	proxywasm.LogInfof("on request ctx id: %v", ctx.contextID)
+	key := fmt.Sprintf("key-%d", ctx.contextID)
+
+	val, cas, err := proxywasm.GetSharedData(fmt.Sprintf("key-%d", ctx.contextID-1))
+	if err != nil {
+		proxywasm.LogCriticalf("failed to get shared data: %v", err)
+	}
+
+	proxywasm.LogInfof("headers on request shared data: %v, cas: %v", string(val), cas)
+
+	err = proxywasm.SetSharedData(key, []byte(key), ctx.contextID)
+	if err != nil {
+		proxywasm.LogCriticalf("failed to set shared data: %v", err)
+		return types.ActionPause
+	}
 	hs, err := proxywasm.GetHttpRequestHeaders()
 	if err != nil {
 		proxywasm.LogCriticalf("failed to get request headers: %v", err)
@@ -196,6 +212,7 @@ func (ctx *httpHeaders) OnHttpRequestHeaders(numHeaders int, endOfStream bool) t
 
 // Override types.DefaultHttpContext.
 func (ctx *httpHeaders) OnHttpResponseHeaders(_ int, _ bool) types.Action {
+	proxywasm.LogInfof("on response ctx id: %v", ctx.contextID)
 	hs, err := proxywasm.GetHttpResponseHeaders()
 	if err != nil {
 		proxywasm.LogCriticalf("failed to get response headers: %v", err)
